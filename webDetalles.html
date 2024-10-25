@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<h1>Web detalles</h1>
+	<table className='table' border>
+		<thead className='thead-dark'>
+			<tr>
+				<th scope="col">ID serie</th>
+				<th scope="col">nombre</th>
+				<th scope="col">puntuacion</th>
+				<th scope="col">año</th>
+				<th scope="col">imagen</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr id="tablaDetalles">
+
+				<!-- <td>
+					<img src={this.state.serie.imagen} width="150px" height="150px"></img>
+				</td> -->
+
+			</tr>
+		</tbody>
+		
+	</table>
+	<table className='table' border>
+		
+		<tbody>
+			<tr id="tablaPersonajes">
+
+			</tr>
+		</tbody>
+		<button onclick="mostrarPersonajes()">mostrar personajes</button>
+	</table>
+	<script src="jquery-3.7.1.js"></script>
+	<script>
+		var params = new window.URLSearchParams(window.location.search);
+		var idSerie = params.get('serieId');
+		console.log(idSerie);
+		var url = "https://apiseriespersonajes.azurewebsites.net/";
+		$(document).ready(function () {
+			var request = "api/series/" + idSerie;
+			$.ajax({
+				url: url + request,
+				type: "GET",
+				success: function (data) {
+					console.log("Muestro datos");
+					var html = ""
+
+					console.log(data)
+					html += "<td>" + data.idSerie + "</td>";
+					html += "<td>" + data.nombre + "</td>";
+					html += "<td>" + data.puntuacion + "</td>";
+					html += "<td>" + data.anyo + "</td>";
+					html += "<td><img src='" + data.imagen + "' alt='Imagen de la serie' width='150' height='150' /></td>";
+
+					$("#tablaDetalles").append(html);
+				}
+			})
+		})
+		function mostrarPersonajes() {
+			var params = new window.URLSearchParams(window.location.search);
+			var idSerie = params.get('serieId');
+			console.log(idSerie);
+			var url = "https://apiseriespersonajes.azurewebsites.net/";
+			$(document).ready(function () {
+				var request = "api/series/personajesserie/" + idSerie;
+				$.ajax({
+					url: url + request,
+					type: "GET",
+					success: function (data) {
+						console.log("Muestro datos");
+						var html = "<thead className='thead-dark'><tr><th scope='col'>nombre</th><th scope='col'>imagen</th></tr></thead>";
+						$.each(data, function (index, personaje) {
+							console.log(personaje)
+							
+							html += "<tr>"
+							html += "<td>" + personaje.nombre + "</td>";
+							html += "<td><img src='" + personaje.imagen + "' alt='Imagen de la serie' width='150' height='150' /></td>";
+							html += "</tr>"
+						})
+						$("#tablaPersonajes").append(html);
+					}
+				})
+			})
+		}
+	</script>
+
+</body>
+
+</html>
